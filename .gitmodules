@@ -1,0 +1,5 @@
+[submodule "cpp/secp256k1"]
+	path = cpp/secp256k1
+	url = https://github.com/bitcoin-core/secp256k1.git
+	# Pinned to commit: a660a4976efe880bae7982ee410b9e0dc59ac983 (v0.7.0)
+	# DO NOT UPDATE without explicit approval - this affects cryptographic operations

@@ -53,6 +53,10 @@ jobs:
         with:
           is-high-risk-environment: false
           node-version: ${{ matrix.node-version }}
+      - name: Initialize submodules
+        run: git submodule update --init --recursive
+      - name: Verify submodule commits
+        run: ./scripts/verify-submodules.sh
       - run: yarn lint
       - name: Validate RC changelog
         if: ${{ startsWith(github.head_ref, 'release/') }}
