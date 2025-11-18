@@ -12,7 +12,7 @@ static secp256k1_context* g_ctx = nullptr;
 // Initialize context once (thread-safe)
 static void initializeContext() {
     if (!g_ctx) {
-        g_ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
+        g_ctx = secp256k1_context_create(SECP256K1_CONTEXT_NONE);
     }
 }
 
@@ -122,9 +122,7 @@ std::shared_ptr<ArrayBuffer> HybridNativeUtils::keccak256(const std::string& dat
   uint8_t* dataBytes = static_cast<uint8_t*>(dataBuffer->data());
   
   // Convert hex string to bytes
-  for (size_t i = 0; i < dataLen; i++) {
-      dataBytes[i] = (hexCharToByte(data[i * 2]) << 4) | hexCharToByte(data[i * 2 + 1]);
-  }
+  hexToBytes(data, dataBytes, dataLen);
   
   return keccak256FromBytes(dataBuffer);
 }
