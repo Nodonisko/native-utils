@@ -10,7 +10,6 @@ export interface NativeUtils
   ): ArrayBuffer;
   getPublicKeyEd25519(privateKey: string): ArrayBuffer;
   getPublicKeyEd25519FromBytes(privateKey: ArrayBuffer): ArrayBuffer;
-  keccak256(data: string): ArrayBuffer;
   keccak256FromBytes(data: ArrayBuffer): ArrayBuffer;
   pubToAddress(pubKey: ArrayBuffer, sanitize: boolean): ArrayBuffer;
   hmacSha512(key: ArrayBuffer, data: ArrayBuffer): ArrayBuffer;

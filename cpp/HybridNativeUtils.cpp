@@ -113,19 +113,6 @@ static std::shared_ptr<ArrayBuffer> keccak256Hash(const uint8_t* dataBytes, size
   return result;
 }
 
-std::shared_ptr<ArrayBuffer> HybridNativeUtils::keccak256(const std::string& data) {
-  validateHexString(data);
-  
-  size_t dataLen = data.length() / 2;
-  
-  auto dataBuffer = ArrayBuffer::allocate(dataLen);
-  uint8_t* dataBytes = static_cast<uint8_t*>(dataBuffer->data());
-  
-  // Convert hex string to bytes
-  hexToBytes(data, dataBytes, dataLen);
-  
-  return keccak256FromBytes(dataBuffer);
-}
 std::shared_ptr<ArrayBuffer> HybridNativeUtils::keccak256FromBytes(const std::shared_ptr<ArrayBuffer>& data) {
   // Get the data bytes
   const uint8_t* dataBytes = static_cast<const uint8_t*>(data->data());

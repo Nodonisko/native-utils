@@ -66,9 +66,10 @@ export function getPublicKey(
 
 /**
  * Compute Keccak-256 hash using native implementation.
+ * 100% compatible with @noble/hashes keccak_256 API.
  * Accepts multiple input types for maximum flexibility.
  *
- * @param data - The data to hash as string (hex), number[], ArrayBuffer, or Uint8Array
+ * @param data - The data to hash as string (UTF-8), number[], ArrayBuffer, or Uint8Array
  * @returns Uint8Array containing the 32-byte Keccak-256 hash
  */
 export function keccak256(
@@ -77,8 +78,11 @@ export function keccak256(
   let result: ArrayBuffer;
 
   if (typeof data === 'string') {
-    // Assume hex string, use the string version (C++ will handle hex validation)
-    result = NativeUtilsHybridObject.keccak256(data);
+    // Match noble's behavior: treat string as UTF-8 text, not hex
+    const encoder = new TextEncoder();
+    const bytes = encoder.encode(data);
+    const buffer = uint8ArrayToArrayBuffer(bytes);
+    result = NativeUtilsHybridObject.keccak256FromBytes(buffer);
   } else if (Array.isArray(data)) {
     // Convert number array to Uint8Array, then to ArrayBuffer
     const bytes = numberArrayToUint8Array(data);
@@ -93,7 +97,7 @@ export function keccak256(
     result = NativeUtilsHybridObject.keccak256FromBytes(buffer);
   } else {
     throw new Error(
-      'Data must be a hex string, number[], ArrayBuffer, or Uint8Array',
+      'Data must be a string, number[], ArrayBuffer, or Uint8Array',
     );
   }
 
