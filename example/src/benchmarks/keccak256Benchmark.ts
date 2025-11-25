@@ -96,15 +96,30 @@ export async function benchmarkSmallString(): Promise<BenchmarkResult> {
   );
 }
 
+// Benchmark address-length string (40 hex chars = 20 bytes when decoded, but 40 bytes as UTF-8)
+// This is a common scenario: hashing Ethereum address strings for checksumming, etc.
+export async function benchmarkAddressString(): Promise<BenchmarkResult> {
+  const addressString = 'c24ef7796beeb7694e86fca4bafcdf955f16e6fc';
+
+  return benchmarkFunction(
+    'Address String (40 chars)',
+    () => keccak256(addressString),
+    () => keccak_256(addressString),
+    2000,
+  );
+}
+
 // Benchmark 32-byte private key
 export async function benchmarkPrivateKey(): Promise<BenchmarkResult> {
   const privateKeyHex =
     '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+  // Convert hex to bytes for fair comparison (strings are now UTF-8)
+  const privateKeyBytes = hexToUint8Array('0x' + privateKeyHex);
 
   return benchmarkFunction(
-    '32-byte Private Key (hex string)',
-    () => keccak256(privateKeyHex),
-    () => keccak_256(hexToUint8Array('0x' + privateKeyHex)),
+    '32-byte Private Key (Uint8Array)',
+    () => keccak256(privateKeyBytes),
+    () => keccak_256(privateKeyBytes),
     1500,
   );
 }
@@ -243,55 +258,57 @@ export async function benchmarkETHAddressChecksum(): Promise<BenchmarkResult> {
   );
 }
 
-// Benchmark hex string vs bytes comparison
-export async function benchmarkHexVsBytes(): Promise<BenchmarkResult> {
-  const hexString = '0123456789abcdef'.repeat(8); // 64 bytes as hex (no 0x prefix)
-  const bytesInput = hexToUint8Array('0x' + hexString);
+// Benchmark UTF-8 string vs Uint8Array input comparison
+// Tests if there's any performance difference between input types
+export async function benchmarkStringVsBytes(): Promise<BenchmarkResult> {
+  const testString = 'The quick brown fox jumps over the lazy dog. '.repeat(3); // ~135 chars
+  const bytesInput = utf8ToBytes(testString);
 
-  const nativeTimes: number[] = [];
-  const jsTimes: number[] = [];
+  const stringTimes: number[] = [];
+  const bytesTimes: number[] = [];
   const iterations = 1500;
 
   // Warm up
   for (let i = 0; i < 10; i++) {
-    keccak256(hexString);
+    keccak256(testString);
     keccak256(bytesInput);
   }
 
-  // Benchmark native hex input
+  // Benchmark string input (UTF-8)
   for (let i = 0; i < iterations; i++) {
     const start = performance.now();
-    keccak256(hexString);
+    keccak256(testString);
     const end = performance.now();
-    nativeTimes.push(end - start);
+    stringTimes.push(end - start);
   }
 
   await new Promise((resolve) => setTimeout(resolve, 10));
 
-  // Benchmark native bytes input
+  // Benchmark Uint8Array input
   for (let i = 0; i < iterations; i++) {
     const start = performance.now();
     keccak256(bytesInput);
     const end = performance.now();
-    jsTimes.push(end - start);
+    bytesTimes.push(end - start);
   }
 
-  const nativeStats = calculateStats(nativeTimes);
-  const jsStats = calculateStats(jsTimes);
+  const stringStats = calculateStats(stringTimes);
+  const bytesStats = calculateStats(bytesTimes);
 
-  const speedupFactor = jsStats.averageTime / nativeStats.averageTime;
-  const nativeIsFaster = nativeStats.averageTime < jsStats.averageTime;
+  const speedupFactor = bytesStats.averageTime / stringStats.averageTime;
+  const stringIsFaster = stringStats.averageTime < bytesStats.averageTime;
   const performanceGain =
-    ((jsStats.averageTime - nativeStats.averageTime) / jsStats.averageTime) *
+    ((bytesStats.averageTime - stringStats.averageTime) /
+      bytesStats.averageTime) *
     100;
 
   return {
-    testName: 'Hex String vs Bytes Input (Native)',
-    native: nativeStats,
-    javascript: jsStats,
+    testName: 'String vs Uint8Array Input',
+    native: stringStats,
+    javascript: bytesStats,
     comparison: {
       speedupFactor,
-      nativeIsFaster,
+      nativeIsFaster: stringIsFaster,
       performanceGain,
     },
   };
@@ -303,12 +320,13 @@ export async function runAllKeccak256Benchmarks(): Promise<BenchmarkResult[]> {
 
   const benchmarks = [
     { name: 'Small String', fn: benchmarkSmallString },
+    { name: 'Address String', fn: benchmarkAddressString },
     { name: 'Private Key', fn: benchmarkPrivateKey },
     { name: 'Public Key', fn: benchmarkPublicKey },
     { name: 'BIP32 Seed', fn: benchmarkBIP32Seed },
     { name: 'Transaction Data', fn: benchmarkTransactionData },
     { name: 'ETH Address Checksum', fn: benchmarkETHAddressChecksum },
-    { name: 'Hex vs Bytes', fn: benchmarkHexVsBytes },
+    { name: 'String vs Bytes', fn: benchmarkStringVsBytes },
   ];
 
   const results: BenchmarkResult[] = [];

@@ -86,6 +86,172 @@ const EDGE_CASE_VECTORS = [
   },
 ];
 
+// Real-world regression test vectors (hex string inputs that produced mismatches)
+const REAL_WORLD_REGRESSION_VECTORS = [
+  {
+    name: 'Regression 1',
+    input: 'c24ef7796beeb7694e86fca4bafcdf955f16e6fc',
+    expected:
+      '685e0f46502ecea5c5295794cc7a75b6f2e600d342e7747f0720801dae53dac8',
+  },
+  {
+    name: 'Regression 2',
+    input: '7c0098a632dadda2b0bd7e61ce0e0aae475b71b9',
+    expected:
+      '4b8aa6f1876dc1b23baf944b4588181d9be94570ce632d59904dbcd1d8d061c1',
+  },
+  {
+    name: 'Regression 3',
+    input: 'b7097abf11a01bc24055594c17e00ac420b8340d',
+    expected:
+      'b95c5b052cabe6e6e62840083262499e53951d94dd618930a0d93dae7bcce08a',
+  },
+  {
+    name: 'Regression 4',
+    input: '812361947078e31ed8665836b1558d93486ea3ce',
+    expected:
+      '23b86b252d5364c6930b2199c47cee2c5023e13cb56450f46a03291d1e503cec',
+  },
+  {
+    name: 'Regression 5',
+    input: '205f993a489df59761c56a97b52c463c3a1e7a94',
+    expected:
+      'f04af70574355312f900f027743a14af00260ba89c1e74aa23cfdcc76ccd3b18',
+  },
+  {
+    name: 'Regression 6',
+    input: '82a38e01d487dddf57a9a5d3413f7f15b9848137',
+    expected:
+      '2bdfd737ef55c2406c7e22a68bc55e3ebc6a3f4687209a8d711a282a49ad0552',
+  },
+  {
+    name: 'Regression 7',
+    input: '708922a24d868f1f95f02f6b9a6bb78c3a251822',
+    expected:
+      'b548b7eedb3d6b5bba248221b4c53e61bf6998db0cccb93f2f278a787dbce940',
+  },
+  {
+    name: 'Regression 8',
+    input: '7eb8208adf0e9001747faf3752b94aaf47171aec',
+    expected:
+      'fc85b7e71730d6cd87482aab2d72547136ff35f34972454a7d5d58953539ade8',
+  },
+  {
+    name: 'Regression 9',
+    input: '6f1e92b2218d7e01b448b6d0198066fd3a24c94e',
+    expected:
+      '61e516e2676e4adefd150b23af3dd09fbe8b2518826d693c27e28b4fa2160edd',
+  },
+  {
+    name: 'Regression 10',
+    input: '1a72ee4da274f1bcf6af3bac305d5d483eb0610c',
+    expected:
+      '378d644ab52b8aee2d7133aa0aeeee1b32a8ddd6c2889af7b0b822700d912fb6',
+  },
+  {
+    name: 'Regression 11',
+    input: '7edad62bac0eed45f4c7bc1b9a28ad4be899661f',
+    expected:
+      '8bd4872b5b820535f7bc893b3bf513052ea9d5b741af152e60fea01c2fd13d55',
+  },
+  {
+    name: 'Regression 12',
+    input: '8de73eeea3d55d8433f32b1527a6975cd08033fe',
+    expected:
+      'b5faacb5c0daf75598c4eb6f2d523861331814680f02cc0fdb03b005364ad693',
+  },
+  {
+    name: 'Regression 13',
+    input: '5528bcd3ad2ed78c87ec14b5615de401531af294',
+    expected:
+      '5af0ce95ba1c5327fa3a03a2d71049a28df5618461568a21acc1d027a3ea7662',
+  },
+  {
+    name: 'Regression 14',
+    input: '4b7db62d807732ab6c480e989fa5aaf09e140d7c',
+    expected:
+      'fedd7819be62f5e0882f96ed798fdce8af937ba97f7536689ce6dd79e6262f44',
+  },
+  {
+    name: 'Regression 15',
+    input: '38e6d583f2aa04d84aaaf6a42237da80715eaba4',
+    expected:
+      '3ac059be640b107102d5f259b9ec68a201ea7dfb5a584b5c856dae12e08d8df8',
+  },
+  {
+    name: 'Regression 16',
+    input: 'e068d3c3e0098c22b0e708a0f22be02a52953565',
+    expected:
+      'e01391911498bf5f3486d7c5fd11f7b100aa17389d33fe219eaa0164f1903cc9',
+  },
+  {
+    name: 'Regression 17',
+    input: '6a4b0984b1a877edef5a5a36b2b86b3cf33bb1f9',
+    expected:
+      '445cfb88faa23729b395e30acd15b11b4f2af22ac452376b900d0681206c7712',
+  },
+  {
+    name: 'Regression 18',
+    input: '739ac2a08ded6ec03b5954c8efdef7640dfd4a48',
+    expected:
+      '34f34b80ad3d3fbf5db260df557c5b518ad7c40c4c2f5c8bcbd5f3b33ec61a1a',
+  },
+  {
+    name: 'Regression 19',
+    input: '12811b73ae4c6fc876166276866a1a6e2464e754',
+    expected:
+      'daf59840ee8e2cfa41ea6cd4e517529abbaccc053accbb01667978387a9b640e',
+  },
+  {
+    name: 'Regression 20',
+    input: '568f30e65b7d555319c943100fe25e5788daf280',
+    expected:
+      'fd8126c7a15c4f3d711348a699088d45f609cd25ee580a4f3627963eb79b6822',
+  },
+  {
+    name: 'Regression 21',
+    input: '9855d3f0580ccbef16fb3cc7bd6d309223bd1229',
+    expected:
+      '2c3a3c18438049cdb6ae99b2f158e35dd4ccb2ac761e5c6a5eb74ce1ebfeb412',
+  },
+  {
+    name: 'Regression 22',
+    input: 'bb1789127f1547914fa682bdfe41674a4793c3c0',
+    expected:
+      '4cada0de9b0b65468a779a73b4255e1c81c5d84257fc6d4248367eb236d033ad',
+  },
+  {
+    name: 'Regression 23',
+    input: '29c048b54aa39008b81129649acabf0fcaddd772',
+    expected:
+      'a4c5d6d91e842f18b1f0737ffb33a2cb0f75c7a53d69fc2f7763ba33a2b1008b',
+  },
+  {
+    name: 'Regression 24',
+    input: '5a97d8aa6d6a06636b9e80727121c31640082606',
+    expected:
+      'fff5b199f28a379cfd4ed8fb289e54115b81ab5ff676de6987d152536e2b659d',
+  },
+  {
+    name: 'Regression 25',
+    input: 'c5030f3aa7d5e342f21b496548071fa42f033d76',
+    expected:
+      'b05f5191c327c1454d3ab7babae31bc0fa66cc5b95c9a9d4fae9b31911a85d15',
+  },
+  {
+    name: 'Regression 26',
+    input: '122e9d42c470142e2fd70120b686c2342c9bf37b',
+    expected:
+      '631fc615af0bf20948aa97c71930f60f2460b9dd1d865f95977da2c59bc6dead',
+  },
+  {
+    name: 'Regression 27',
+    input: 'e609de43f1b5be05120161010f9dbfb8ec4abf3c',
+    expected:
+      '89f5c83b60ce63dfb69ce762895c6efc79919c445c1a12c354ee22c25e9067c2',
+  },
+];
+
 // Test input format variations (string, Uint8Array, ArrayBuffer, number[])
 export function testInputFormats(): TestResult[] {
   const results: TestResult[] = [];
@@ -110,17 +276,17 @@ export function testInputFormats(): TestResult[] {
           : `Expected: ${expectedHex}, got: ${hex1}`,
     });
 
-    // Test 2: String input (hex string of the same data)
-    const hexString = uint8ArrayToHex(testBytes, false);
-    const result2 = keccak256(hexString);
+    // Test 2: String input (UTF-8 string - same as passing through utf8ToBytes)
+    // keccak256("hello world") should equal keccak256(utf8ToBytes("hello world"))
+    const result2 = keccak256(testData);
     const hex2 = uint8ArrayToHex(result2, false);
 
     results.push({
-      name: 'String input (hex)',
+      name: 'String input (UTF-8)',
       success: hex2 === expectedHex,
       message:
         hex2 === expectedHex
-          ? '✓ Hex string input works correctly'
+          ? '✓ UTF-8 string input works correctly'
           : `Expected: ${expectedHex}, got: ${hex2}`,
     });
 
@@ -153,14 +319,15 @@ export function testInputFormats(): TestResult[] {
           : `Expected: ${expectedHex}, got: ${hex4}`,
     });
 
-    // Test 5: Verify all formats produce same result
+    // Test 5: Verify string, Uint8Array, ArrayBuffer, and number[] all produce same result
+    // (string is now UTF-8, so keccak256("hello world") === keccak256(utf8ToBytes("hello world")))
     const allMatch = hex1 === hex2 && hex2 === hex3 && hex3 === hex4;
     results.push({
       name: 'All input formats produce same result',
       success: allMatch,
       message: allMatch
         ? '✓ All input formats produce identical results'
-        : `Results differ: Uint8Array(${hex1}), hex(${hex2}), buffer(${hex3}), array(${hex4})`,
+        : `Results differ: Uint8Array(${hex1}), string(${hex2}), buffer(${hex3}), array(${hex4})`,
     });
   } catch (error) {
     results.push({
@@ -195,16 +362,16 @@ export function testInputFormatEdgeCases(): TestResult[] {
           : `Expected: ${expectedEmpty}, got: ${hex1}`,
     });
 
-    // Empty hex string
+    // Empty string (UTF-8 encoded empty string = 0 bytes)
     const result2 = keccak256('');
     const hex2 = uint8ArrayToHex(result2, false);
 
     results.push({
-      name: 'Empty hex string',
+      name: 'Empty string',
       success: hex2 === expectedEmpty,
       message:
         hex2 === expectedEmpty
-          ? '✓ Empty hex string works correctly'
+          ? '✓ Empty string works correctly'
           : `Expected: ${expectedEmpty}, got: ${hex2}`,
     });
 
@@ -242,7 +409,7 @@ export function testInputFormatEdgeCases(): TestResult[] {
       success: allEmptyMatch,
       message: allEmptyMatch
         ? '✓ All empty input formats produce identical results'
-        : `Results differ: bytes(${hex1}), hex(${hex2}), buffer(${hex3}), array(${hex4})`,
+        : `Results differ: bytes(${hex1}), string(${hex2}), buffer(${hex3}), array(${hex4})`,
     });
   } catch (error) {
     results.push({
@@ -252,7 +419,8 @@ export function testInputFormatEdgeCases(): TestResult[] {
     });
   }
 
-  // Test single byte inputs for each type
+  // Test single byte inputs for Uint8Array, ArrayBuffer, and number[]
+  // Note: String input is UTF-8, so a single character string is NOT the same as a single byte
   try {
     const singleByte = 0x00;
     const expectedSingle =
@@ -261,10 +429,6 @@ export function testInputFormatEdgeCases(): TestResult[] {
     // Single byte in Uint8Array
     const result1 = keccak256(new Uint8Array([singleByte]));
     const hex1 = uint8ArrayToHex(result1, false);
-
-    // Single byte as hex string
-    const result2 = keccak256('00');
-    const hex2 = uint8ArrayToHex(result2, false);
 
     // Single byte in ArrayBuffer
     const buffer = new ArrayBuffer(1);
@@ -286,13 +450,13 @@ export function testInputFormatEdgeCases(): TestResult[] {
           : `Expected: ${expectedSingle}, got: ${hex1}`,
     });
 
-    const allSingleMatch = hex1 === hex2 && hex2 === hex3 && hex3 === hex4;
+    const allSingleMatch = hex1 === hex3 && hex3 === hex4;
     results.push({
-      name: 'Single byte input consistency',
+      name: 'Single byte input consistency (Uint8Array, ArrayBuffer, number[])',
       success: allSingleMatch,
       message: allSingleMatch
         ? '✓ All single-byte input formats produce identical results'
-        : `Results differ: bytes(${hex1}), hex(${hex2}), buffer(${hex3}), array(${hex4})`,
+        : `Results differ: bytes(${hex1}), buffer(${hex3}), array(${hex4})`,
     });
   } catch (error) {
     results.push({
@@ -397,44 +561,38 @@ export function testEdgeCases(): TestResult[] {
   return results;
 }
 
-// Test error handling
-export function testErrorHandling(): TestResult[] {
+// Test real-world regression cases (hex string inputs)
+export function testRealWorldRegressions(): TestResult[] {
   const results: TestResult[] = [];
 
-  // Test invalid hex string
-  try {
-    keccak256('invalid_hex_string');
-    results.push({
-      name: 'Invalid hex string',
-      success: false,
-      message: 'Should have thrown error for invalid hex string',
-    });
-  } catch (error) {
-    results.push({
-      name: 'Invalid hex string',
-      success: true,
-      message: '✓ Correctly throws error for invalid hex string',
-    });
-  }
+  REAL_WORLD_REGRESSION_VECTORS.forEach((vector) => {
+    try {
+      const result = keccak256(vector.input);
+      const hex = uint8ArrayToHex(result, false);
+      const matches = hex === vector.expected;
 
-  // Test odd-length hex string
-  try {
-    keccak256('123');
-    results.push({
-      name: 'Odd-length hex string',
-      success: false,
-      message: 'Should have thrown error for odd-length hex string',
-    });
-  } catch (error) {
-    results.push({
-      name: 'Odd-length hex string',
-      success: true,
-      message: '✓ Correctly throws error for odd-length hex string',
-    });
-  }
+      results.push({
+        name: vector.name,
+        success: matches,
+        message: matches
+          ? '✓ Matches expected result'
+          : `Expected: ${vector.expected}, got: ${hex}`,
+      });
+    } catch (error) {
+      results.push({
+        name: vector.name,
+        success: false,
+        message: `Error: ${error}`,
+      });
+    }
+  });
 
   return results;
 }
+
+// Note: Error handling tests for "invalid hex string" removed because
+// strings are now treated as UTF-8 (matching noble's behavior), not hex.
+// Any string is valid UTF-8 input.
 
 // Test return type
 export function testReturnType(): TestResult[] {
@@ -592,20 +750,19 @@ export function testNobleInputFormatConsistency(): TestResult[] {
         : `✗ Mismatch - Native: ${uint8ArrayToHex(nativeResult1, false).slice(0, 16)}..., Noble: ${uint8ArrayToHex(nobleResult1, false).slice(0, 16)}...`,
     });
 
-    // Test 2: Hex string (native) vs Uint8Array (noble) - should produce same result
-    const hexString = uint8ArrayToHex(testBytes, false);
-    const nativeResult2 = keccak256(hexString); // Native supports hex string
-    const nobleResult2 = keccak_256(testBytes); // Noble uses Uint8Array
+    // Test 2: String input (native) vs String input (noble) - MUST produce same result for drop-in compatibility
+    const nativeResult2 = keccak256(testData); // Native with string
+    const nobleResult2 = keccak_256(testData); // Noble with string
     const hex2Match =
       uint8ArrayToHex(nativeResult2, false) ===
       uint8ArrayToHex(nobleResult2, false);
 
     results.push({
-      name: 'Hex string (native) vs Uint8Array (noble)',
+      name: 'String input: Native vs Noble (drop-in compatibility)',
       success: hex2Match,
       message: hex2Match
-        ? '✓ Native hex string input matches Noble Uint8Array'
-        : `✗ Mismatch - Native hex: ${uint8ArrayToHex(nativeResult2, false).slice(0, 16)}..., Noble bytes: ${uint8ArrayToHex(nobleResult2, false).slice(0, 16)}...`,
+        ? '✓ Native string input matches Noble string input'
+        : `✗ Mismatch - Native: ${uint8ArrayToHex(nativeResult2, false).slice(0, 16)}..., Noble: ${uint8ArrayToHex(nobleResult2, false).slice(0, 16)}...`,
     });
 
     // Test 3: ArrayBuffer (native) vs Uint8Array (noble)
@@ -651,6 +808,130 @@ export function testNobleInputFormatConsistency(): TestResult[] {
   return results;
 }
 
+// Test DIRECT string comparison with @noble/hashes - critical for drop-in replacement compatibility
+// This ensures that keccak256(someString) produces identical results to keccak_256(someString)
+export function testNobleDirectStringComparison(): TestResult[] {
+  const results: TestResult[] = [];
+
+  // Various string inputs that could be passed to the function
+  // These include hex-looking strings, regular text, edge cases
+  const stringTestCases = [
+    // Hex-looking strings (the original bug case - these should be treated as UTF-8, not decoded)
+    'c24ef7796beeb7694e86fca4bafcdf955f16e6fc',
+    '7c0098a632dadda2b0bd7e61ce0e0aae475b71b9',
+    'b7097abf11a01bc24055594c17e00ac420b8340d',
+    '0x1234567890abcdef', // With 0x prefix
+    'deadbeef',
+    'DEADBEEF', // Uppercase hex
+    '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', // 64 char hex
+
+    // Regular text strings
+    '',
+    'hello',
+    'hello world',
+    'Hello, 世界',
+    'The quick brown fox jumps over the lazy dog',
+    'abc',
+    'a',
+
+    // Edge cases
+    '   ', // Whitespace
+    '\n\t\r', // Special characters
+    '🚀🌍💫', // Emojis
+    'null',
+    'undefined',
+    'true',
+    'false',
+    '0',
+    '1',
+    '-1',
+    '3.14159',
+
+    // Ethereum-related strings
+    'transfer(address,uint256)',
+    'Transfer(address,address,uint256)',
+    'balanceOf(address)',
+    'approve(address,uint256)',
+  ];
+
+  for (const testString of stringTestCases) {
+    try {
+      // Pass the EXACT same string to both implementations
+      const nativeResult = keccak256(testString);
+      const nobleResult = keccak_256(testString);
+
+      const nativeHex = uint8ArrayToHex(nativeResult, false);
+      const nobleHex = uint8ArrayToHex(nobleResult, false);
+      const matches = nativeHex === nobleHex;
+
+      const displayString =
+        testString.length > 20
+          ? `${testString.slice(0, 20)}...`
+          : testString || '(empty)';
+
+      results.push({
+        name: `Direct string: "${displayString}"`,
+        success: matches,
+        message: matches
+          ? `✓ Native matches Noble: ${nativeHex.slice(0, 16)}...`
+          : `✗ MISMATCH - Native: ${nativeHex}, Noble: ${nobleHex}`,
+      });
+    } catch (error) {
+      results.push({
+        name: `Direct string: "${testString.slice(0, 20)}..."`,
+        success: false,
+        message: `Error: ${error}`,
+      });
+    }
+  }
+
+  return results;
+}
+
+// Test that regression vectors match noble when passed as strings (the original bug scenario)
+export function testRegressionVectorsMatchNoble(): TestResult[] {
+  const results: TestResult[] = [];
+
+  // Use the same regression vectors, but compare native vs noble directly
+  REAL_WORLD_REGRESSION_VECTORS.forEach((vector) => {
+    try {
+      // Pass the same string input to both
+      const nativeResult = keccak256(vector.input);
+      const nobleResult = keccak_256(vector.input);
+
+      const nativeHex = uint8ArrayToHex(nativeResult, false);
+      const nobleHex = uint8ArrayToHex(nobleResult, false);
+      const matches = nativeHex === nobleHex;
+
+      results.push({
+        name: `${vector.name}: Native vs Noble`,
+        success: matches,
+        message: matches
+          ? `✓ Native matches Noble: ${nativeHex.slice(0, 16)}...`
+          : `✗ MISMATCH - Native: ${nativeHex}, Noble: ${nobleHex}`,
+      });
+
+      // Also verify the result matches the expected value (which is the noble result)
+      const matchesExpected = nativeHex === vector.expected;
+      results.push({
+        name: `${vector.name}: Matches expected`,
+        success: matchesExpected,
+        message: matchesExpected
+          ? '✓ Matches expected hash'
+          : `✗ Expected: ${vector.expected}, Got: ${nativeHex}`,
+      });
+    } catch (error) {
+      results.push({
+        name: `${vector.name}: Native vs Noble`,
+        success: false,
+        message: `Error: ${error}`,
+      });
+    }
+  });
+
+  return results;
+}
+
 // Run all keccak256 tests
 export function runAllKeccak256Tests(): TestResult[] {
   return [
@@ -659,9 +940,11 @@ export function runAllKeccak256Tests(): TestResult[] {
     ...testNISTVectors(),
     ...testEthereumVectors(),
     ...testEdgeCases(),
-    ...testErrorHandling(),
+    ...testRealWorldRegressions(),
     ...testReturnType(),
     ...testNobleComparison(),
     ...testNobleInputFormatConsistency(),
+    ...testNobleDirectStringComparison(),
+    ...testRegressionVectorsMatchNoble(),
   ];
 }
