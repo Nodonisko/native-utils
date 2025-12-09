@@ -53,6 +53,10 @@ import {
   type BenchmarkResult as Ed25519BenchmarkResult,
 } from './benchmarks/ed25519Benchmark';
 import {
+  runAllEcdsaVerifyBenchmarks,
+  type BenchmarkResult as EcdsaVerifyBenchmarkResult,
+} from './benchmarks/ecdsaVerifyBenchmark';
+import {
   testEd25519BasicFunctionality,
   testEd25519PublicKeyFormat,
   testEd25519KnownVectors,
@@ -66,6 +70,7 @@ import {
   verifyMultipleEd25519Vectors,
   type Ed25519VerificationResult,
 } from './tests/ed25519NobleCompatibilityTests';
+import { runAllEcdsaVerifyTests } from './tests/ecdsaVerifyTests';
 
 // Define test suite configuration
 interface TestSuite {
@@ -91,6 +96,7 @@ export default function App() {
     ed25519: TestResult[];
     ed25519Noble: TestResult[];
     ed25519Verification: Ed25519VerificationResult[];
+    ecdsaVerify: TestResult[];
   }>({
     basic: [],
     noble: [],
@@ -103,6 +109,7 @@ export default function App() {
     ed25519: [],
     ed25519Noble: [],
     ed25519Verification: [],
+    ecdsaVerify: [],
   });
 
   const [benchmarkResults, setBenchmarkResults] = useState<{
@@ -111,12 +118,14 @@ export default function App() {
     pubToAddressSuite: PubToAddressBenchmarkResult[] | null;
     keccak256Suite: Keccak256BenchmarkResult[] | null;
     ed25519Suite: Ed25519BenchmarkResult[] | null;
+    ecdsaVerifySuite: EcdsaVerifyBenchmarkResult[] | null;
   }>({
     suite: null,
     hmacSuite: null,
     pubToAddressSuite: null,
     keccak256Suite: null,
     ed25519Suite: null,
+    ecdsaVerifySuite: null,
   });
 
   const [isRunning, setIsRunning] = useState(false);
@@ -201,6 +210,11 @@ export default function App() {
       key: 'ed25519Verification',
       runner: () => verifyMultipleEd25519Vectors(),
     },
+    {
+      name: 'ECDSA Verify - secp256k1 signature verification',
+      key: 'ecdsaVerify',
+      runner: () => runAllEcdsaVerifyTests(),
+    },
   ];
 
   const clearAllResults = () => {
@@ -217,6 +231,7 @@ export default function App() {
       ed25519: [],
       ed25519Noble: [],
       ed25519Verification: [],
+      ecdsaVerify: [],
     });
     setBenchmarkResults({
       suite: null,
@@ -224,6 +239,7 @@ export default function App() {
       pubToAddressSuite: null,
       keccak256Suite: null,
       ed25519Suite: null,
+      ecdsaVerifySuite: null,
     });
   };
 
@@ -340,6 +356,7 @@ export default function App() {
       ...testResults.ed25519.map((r) => ({ success: r.success })),
       ...testResults.ed25519Noble.map((r) => ({ success: r.success })),
       ...testResults.ed25519Verification.map((r) => ({ success: r.matches })),
+      ...testResults.ecdsaVerify.map((r) => ({ success: r.success })),
     ];
 
     const totalTests = allResults.length;
@@ -370,6 +387,8 @@ export default function App() {
     } else if (key === 'pubToAddress') {
       passed = results.filter((r: TestResult) => r.success).length;
     } else if (key === 'keccak256') {
+      passed = results.filter((r: TestResult) => r.success).length;
+    } else if (key === 'ecdsaVerify') {
       passed = results.filter((r: TestResult) => r.success).length;
     } else {
       passed = results.filter((r: TestResult) => r.success).length;
@@ -412,6 +431,17 @@ export default function App() {
                       },
                     ),
                   )
+                }
+                disabled={isRunning}
+              />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                title={
+                  isRunning ? '⏳ Running...' : '✅ ECDSA Verify Benchmark \n'
+                }
+                onPress={() =>
+                  runBenchmark('ecdsaVerifySuite', runAllEcdsaVerifyBenchmarks)
                 }
                 disabled={isRunning}
               />
@@ -1051,6 +1081,95 @@ export default function App() {
                 </View>
               );
             })}
+          </View>
+        )}
+
+        {benchmarkResults.ecdsaVerifySuite && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              ✅ ECDSA Verify Benchmark Suite
+            </Text>
+            <View style={styles.benchmarkSummary}>
+              <Text style={styles.benchmarkSummaryTitle}>
+                📊 Performance Overview
+              </Text>
+              <Text style={styles.benchmarkSummaryText}>
+                {benchmarkResults.ecdsaVerifySuite.length} verification
+                scenarios tested
+              </Text>
+              <Text style={styles.benchmarkSummaryText}>
+                Average Speedup:{' '}
+                {(
+                  benchmarkResults.ecdsaVerifySuite.reduce(
+                    (sum: number, r: any) => sum + r.comparison.speedupFactor,
+                    0,
+                  ) / benchmarkResults.ecdsaVerifySuite.length
+                ).toFixed(2)}
+                x
+              </Text>
+              <Text style={styles.benchmarkSummaryText}>
+                All Faster:{' '}
+                {benchmarkResults.ecdsaVerifySuite.every(
+                  (r: any) => r.comparison.nativeIsFaster,
+                )
+                  ? '✅ Yes'
+                  : '❌ No'}
+              </Text>
+            </View>
+            <Text style={styles.sectionSubtitle}>Individual Test Results:</Text>
+            {benchmarkResults.ecdsaVerifySuite.map(
+              (result: any, index: number) => {
+                const getTestIcon = (testName: string) => {
+                  if (testName.includes('Pre-hashed')) return '🔐';
+                  if (testName.includes('Prehash')) return '📝';
+                  if (testName.includes('Compressed')) return '🗜️';
+                  return '✅';
+                };
+
+                return (
+                  <View key={index} style={styles.benchmarkResult}>
+                    <Text style={styles.benchmarkTitle}>
+                      {getTestIcon(result.testName)} {result.testName}
+                    </Text>
+                    <View style={styles.benchmarkMetrics}>
+                      <Text style={styles.benchmarkDetails}>
+                        🚀 Native: {result.native.averageTime.toFixed(3)}ms avg
+                        • {result.native.iops.toFixed(0)} ops/sec
+                      </Text>
+                      <Text style={styles.benchmarkDetails}>
+                        📜 Noble: {result.javascript.averageTime.toFixed(3)}ms
+                        avg • {result.javascript.iops.toFixed(0)} ops/sec
+                      </Text>
+                      <Text
+                        style={[
+                          styles.benchmarkComparison,
+                          result.comparison.nativeIsFaster
+                            ? styles.success
+                            : styles.failure,
+                        ]}
+                      >
+                        ⚡ {result.comparison.speedupFactor.toFixed(2)}x{' '}
+                        {result.comparison.nativeIsFaster ? 'faster' : 'slower'}{' '}
+                        • {result.comparison.performanceGain.toFixed(1)}%
+                        improvement
+                      </Text>
+                      <Text style={styles.benchmarkRange}>
+                        📈 Range: {result.native.minTime.toFixed(3)}ms -{' '}
+                        {result.native.maxTime.toFixed(3)}ms (Native) |{' '}
+                        {result.javascript.minTime.toFixed(3)}ms -{' '}
+                        {result.javascript.maxTime.toFixed(3)}ms (Noble)
+                      </Text>
+                      <Text style={styles.benchmarkStats}>
+                        📊 Std Dev: ±
+                        {result.native.standardDeviation.toFixed(3)}ms (Native)
+                        • ±{result.javascript.standardDeviation.toFixed(3)}ms
+                        (Noble)
+                      </Text>
+                    </View>
+                  </View>
+                );
+              },
+            )}
           </View>
         )}
       </View>

@@ -59,6 +59,9 @@
     "!cpp/secp256k1/**/*.py",
     "!cpp/botan/**/*"
   ],
+  "workspaces": [
+    "example"
+  ],
   "scripts": {
     "build": "yarn nitrogen && yarn generate:botan && yarn bob build",
     "generate:botan": "./scripts/build-botan.sh",
