@@ -13,4 +13,12 @@ export interface NativeUtils
   keccak256FromBytes(data: ArrayBuffer): ArrayBuffer;
   pubToAddress(pubKey: ArrayBuffer, sanitize: boolean): ArrayBuffer;
   hmacSha512(key: ArrayBuffer, data: ArrayBuffer): ArrayBuffer;
+  ecdsaVerify(
+    signature: ArrayBuffer,
+    message: ArrayBuffer,
+    pubKey: ArrayBuffer,
+    prehash: boolean,
+    lowS: boolean,
+    format: string,
+  ): boolean;
 }

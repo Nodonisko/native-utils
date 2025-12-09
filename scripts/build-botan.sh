@@ -21,7 +21,7 @@ echo "Output directory: $OUTPUT_DIR"
 mkdir -p "$BOTAN_GENERATED_DIR"
 
 # Configuration variables
-BOTAN_MODULES="keccak,hmac,sha2_64,ed25519"
+BOTAN_MODULES="keccak,hmac,sha2_32,sha2_64,ed25519"
 COMMON_FLAGS="--amalgamation --minimized-build --disable-cc-tests"
 
 echo "📦 Using modules: $BOTAN_MODULES"

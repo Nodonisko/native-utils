@@ -177,3 +177,68 @@ export function getPublicKeyEd25519(
 
   return arrayBufferToUint8Array(result);
 }
+
+/** Signature format for ECDSA verification */
+export type ECDSASignatureFormat = 'compact' | 'recovered' | 'der';
+
+/** Options for ECDSA signature verification */
+export type ECDSAVerifyOpts = {
+  /** If true (default), hash the message with SHA-256 before verification */
+  prehash?: boolean;
+  /** If true (default), reject signatures with high S value */
+  lowS?: boolean;
+  /** Signature format: 'compact' (64 bytes), 'recovered' (65 bytes), or 'der' */
+  format?: ECDSASignatureFormat;
+};
+
+/**
+ * Verify an ECDSA signature using the secp256k1 curve.
+ * This is a fast native implementation that matches the noble/curves secp256k1.verify API.
+ *
+ * SECURITY NOTES:
+ * - Enforces malleability protection by rejecting high-S signatures (lowS=true by default)
+ * - DER format parsing is strictly compliant with RFC 5912 (rejects BER encoding for security)
+ * - Validates all cryptographic parameters (r, s within curve order, valid public keys)
+ *
+ * @param signature - The signature as Uint8Array (64 bytes compact, 65 bytes recovered, or variable DER)
+ * @param message - The message as Uint8Array (raw message if prehash=true, 32-byte hash if prehash=false)
+ * @param publicKey - The public key as Uint8Array (33 bytes compressed or 65 bytes uncompressed)
+ * @param opts - Verification options
+ * @param opts.prehash - If true (default), hash message with SHA-256 before verification
+ * @param opts.lowS - If true (default), reject signatures with high S value (prevents malleability)
+ * @param opts.format - Signature format: 'compact' (default), 'recovered', or 'der'
+ * @returns true if the signature is valid, false otherwise
+ */
+export function verify(
+  signature: Uint8Array,
+  message: Uint8Array,
+  publicKey: Uint8Array,
+  opts?: ECDSAVerifyOpts,
+): boolean {
+  const prehash = opts?.prehash ?? true;
+  const lowS = opts?.lowS ?? true;
+  const format = opts?.format ?? 'compact';
+
+  if (!(signature instanceof Uint8Array)) {
+    throw new Error('Signature must be a Uint8Array');
+  }
+  if (!(message instanceof Uint8Array)) {
+    throw new Error('Message must be a Uint8Array');
+  }
+  if (!(publicKey instanceof Uint8Array)) {
+    throw new Error('Public key must be a Uint8Array');
+  }
+
+  const sigBuffer = uint8ArrayToArrayBuffer(signature);
+  const msgBuffer = uint8ArrayToArrayBuffer(message);
+  const pubKeyBuffer = uint8ArrayToArrayBuffer(publicKey);
+
+  return NativeUtilsHybridObject.ecdsaVerify(
+    sigBuffer,
+    msgBuffer,
+    pubKeyBuffer,
+    prehash,
+    lowS,
+    format,
+  );
+}

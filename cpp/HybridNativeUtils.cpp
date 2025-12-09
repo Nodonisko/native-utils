@@ -207,4 +207,105 @@ double HybridNativeUtils::multiply(double a, double b) {
   return a * b;
 }
 
+static void sha256Hash(const uint8_t* data, size_t dataLen, uint8_t* output) {
+  auto hasher = Botan::HashFunction::create("SHA-256");
+  if (!hasher) {
+    throw std::runtime_error("Failed to create SHA-256 hasher");
+  }
+  hasher->update(data, dataLen);
+  hasher->final(output);
+}
+
+bool HybridNativeUtils::ecdsaVerify(
+    const std::shared_ptr<ArrayBuffer>& signature,
+    const std::shared_ptr<ArrayBuffer>& message,
+    const std::shared_ptr<ArrayBuffer>& pubKey,
+    bool prehash,
+    bool lowS,
+    const std::string& format) {
+  initializeContext();
+  
+  const uint8_t* sigBytes = static_cast<const uint8_t*>(signature->data());
+  size_t sigLen = signature->size();
+  const uint8_t* msgBytes = static_cast<const uint8_t*>(message->data());
+  size_t msgLen = message->size();
+  const uint8_t* pubKeyBytes = static_cast<const uint8_t*>(pubKey->data());
+  size_t pubKeyLen = pubKey->size();
+  
+  // Parse the signature based on format
+  secp256k1_ecdsa_signature sig;
+  
+  if (format == "compact") {
+    if (sigLen != 64) {
+      return false;
+    }
+    if (!secp256k1_ecdsa_signature_parse_compact(g_ctx, &sig, sigBytes)) {
+      return false;
+    }
+  } else if (format == "recovered") {
+    // Recovered format is 65 bytes: recovery byte + 64 byte compact signature
+    if (sigLen != 65) {
+      return false;
+    }
+    // Skip the first byte (recovery byte) and parse the remaining 64 bytes as compact
+    if (!secp256k1_ecdsa_signature_parse_compact(g_ctx, &sig, sigBytes + 1)) {
+      return false;
+    }
+  } else if (format == "der") {
+    // Defensive checks for DER format to prevent crashes on malformed input
+    // Valid secp256k1 DER signatures are typically 70-72 bytes, max ~73 bytes
+    // Minimum is 8 bytes (2 for SEQUENCE header + 2x3 for minimal integers)
+    // Strict DER validation prevents parsing ambiguities and improves security
+    if (sigLen < 8 || sigLen > 73) {
+      return false;
+    }
+    // Must start with SEQUENCE tag (0x30)
+    if (sigBytes[0] != 0x30) {
+      return false;
+    }
+    // The length byte should indicate remaining length
+    // For short form (which all valid ECDSA sigs use), it should be sigLen - 2
+    if (sigBytes[1] != sigLen - 2) {
+      return false;
+    }
+    if (!secp256k1_ecdsa_signature_parse_der(g_ctx, &sig, sigBytes, sigLen)) {
+      return false;
+    }
+  } else {
+    throw std::runtime_error("Invalid signature format. Must be 'compact', 'recovered', or 'der'");
+  }
+  
+  // Check if signature has high S and handle accordingly
+  // secp256k1_ecdsa_signature_normalize returns 1 if the signature had high S (was normalized)
+  // We always normalize the signature for verification (both (r,s) and (r,n-s) are mathematically valid)
+  // but only reject high-S when lowS=true
+  bool wasHighS = secp256k1_ecdsa_signature_normalize(g_ctx, &sig, &sig) == 1;
+  
+  // Reject high-S signatures if lowS enforcement is requested
+  if (lowS && wasHighS) {
+    return false;
+  }
+  
+  // Compute message hash if prehash is true
+  uint8_t msgHash[32];
+  if (prehash) {
+    sha256Hash(msgBytes, msgLen, msgHash);
+  } else {
+    // Message should already be a 32-byte hash
+    if (msgLen != 32) {
+      return false;
+    }
+    memcpy(msgHash, msgBytes, 32);
+  }
+  
+  // Parse the public key
+  secp256k1_pubkey parsedPubKey;
+  if (!secp256k1_ec_pubkey_parse(g_ctx, &parsedPubKey, pubKeyBytes, pubKeyLen)) {
+    return false;
+  }
+  
+  // Verify the signature
+  return secp256k1_ecdsa_verify(g_ctx, &sig, msgHash, &parsedPubKey) == 1;
+}
+
 } // namespace margelo::nitro::metamask_nativeutils

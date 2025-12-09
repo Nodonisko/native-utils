@@ -17,6 +17,7 @@ public:
   std::shared_ptr<ArrayBuffer> keccak256FromBytes(const std::shared_ptr<ArrayBuffer>& data) override;
   std::shared_ptr<ArrayBuffer> pubToAddress(const std::shared_ptr<ArrayBuffer>& pubKey, bool sanitize = false) override;
   std::shared_ptr<ArrayBuffer> hmacSha512(const std::shared_ptr<ArrayBuffer>& key, const std::shared_ptr<ArrayBuffer>& data) override;
+  bool ecdsaVerify(const std::shared_ptr<ArrayBuffer>& signature, const std::shared_ptr<ArrayBuffer>& message, const std::shared_ptr<ArrayBuffer>& pubKey, bool prehash, bool lowS, const std::string& format) override;
 };
 
 } // namespace margelo::nitro::metamask_nativeutils
